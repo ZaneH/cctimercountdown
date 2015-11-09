@@ -35,20 +35,23 @@
 %hook SBCCButtonSectionController
 
 UILabel *timeRemainingLabel;
-double secondsBetweenNowAndFireDate;
+NSDate *pendingDate;
+NSTimer *pendingTimer;
 
 %new
 - (void)updateLabel:(NSTimer *)timer {
-	[timeRemainingLabel setText:[self prettyPrintTime:secondsBetweenNowAndFireDate]];
+	[timeRemainingLabel setText:[self prettyPrintTime:[pendingDate timeIntervalSinceDate:[NSDate date]]]];
 }
 
 - (void)viewWillAppear:(_Bool)arg1 {
+	[pendingTimer invalidate];
 	// grab the time manager (model (where all the information resides))
 	TimerManager *timeManager = [%c(TimerManager) sharedManager];
 	// get the notification from the time manager
 	UIConcreteLocalNotification *notification = MSHookIvar<UIConcreteLocalNotification *>(timeManager, "_notification");
 	// calculate the time between when the timer goes off and now (in seconds)
-	secondsBetweenNowAndFireDate = [[notification fireDate] timeIntervalSinceDate: [NSDate date]];
+	pendingDate = [notification fireDate];
+	NSTimeInterval secondsBetweenNowAndFireDate = [pendingDate timeIntervalSinceDate:[NSDate date]];
 	// create our label as long as there is a timer running
 	if (secondsBetweenNowAndFireDate > 0) {
 		// grab the timer cc shortcut from a SBCCButtonSectionController ivar
@@ -65,9 +68,16 @@ double secondsBetweenNowAndFireDate;
 		[[timerButton view] addSubview:timeRemainingLabel];
 
 		// create a timer to keep our label up-to-date
-		__unused NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateLabel:) userInfo:nil repeats:YES];
+		pendingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateLabel:) userInfo:nil repeats:YES];
 	}
 	return %orig;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[pendingTimer invalidate];
+	pendingTimer = nil;
+	%orig();
 }
 
 %new
