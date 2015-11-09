@@ -65,7 +65,7 @@ double secondsBetweenNowAndFireDate;
 		[[timerButton view] addSubview:timeRemainingLabel];
 
 		// create a timer to keep our label up-to-date
-		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateLabel:) userInfo:nil repeats:YES];
+		__unused NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateLabel:) userInfo:nil repeats:YES];
 	}
 	return %orig;
 }
