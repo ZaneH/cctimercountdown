@@ -37,18 +37,31 @@
 UILabel *timeRemainingLabel;
 NSDate *pendingDate;
 NSTimer *pendingTimer;
+SBCCShortcutButtonController *timerButton;
 
 %new
 - (void)updateLabel:(NSTimer *)timer {
+	// if the cc was open when the timer went off, some goofy stuff happens; this fixes it
+	if ([pendingDate timeIntervalSinceDate:[NSDate date]] <= 0) {
+		[timeRemainingLabel removeFromSuperview];
+		[[[[timerButton view] subviews] lastObject] setHidden:NO];
+		return;
+	}
 	[timeRemainingLabel setText:[self prettyPrintTime:[pendingDate timeIntervalSinceDate:[NSDate date]]]];
 }
 
 - (void)viewWillAppear:(_Bool)arg1 {
 	[pendingTimer invalidate];
+	[timeRemainingLabel removeFromSuperview];
+	timeRemainingLabel = nil;
 	// grab the time manager (model (where all the information resides))
 	TimerManager *timeManager = [%c(TimerManager) sharedManager];
 	// get the notification from the time manager
 	UIConcreteLocalNotification *notification = MSHookIvar<UIConcreteLocalNotification *>(timeManager, "_notification");
+	if (!notification) {
+		[[[[timerButton view] subviews] lastObject] setHidden:NO];
+		return %orig;
+	}
 	// calculate the time between when the timer goes off and now (in seconds)
 	pendingDate = [notification fireDate];
 	NSTimeInterval secondsBetweenNowAndFireDate = [pendingDate timeIntervalSinceDate:[NSDate date]];
@@ -57,7 +70,7 @@ NSTimer *pendingTimer;
 		// grab the timer cc shortcut from a SBCCButtonSectionController ivar
 		NSDictionary *ccShortcuts = MSHookIvar<NSDictionary *>(self, "_moduleControllersByID");
 		// grab the timer cc button from the ivar's mutable array
-		SBCCShortcutButtonController *timerButton = [ccShortcuts objectForKey:@"com.apple.mobiletimer"];
+		timerButton = [ccShortcuts objectForKey:@"com.apple.mobiletimer"];
 		// hide the image view so we can see the label better
 		[[[[timerButton view] subviews] lastObject] setHidden:YES];
 		// create a label to display the time
@@ -73,10 +86,11 @@ NSTimer *pendingTimer;
 	return %orig;
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
 	[pendingTimer invalidate];
 	pendingTimer = nil;
+	[timeRemainingLabel removeFromSuperview];
+	timeRemainingLabel = nil;
 	%orig();
 }
 
