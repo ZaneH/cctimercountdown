@@ -66,7 +66,6 @@ double secondsBetweenNowAndFireDate;
 
 		// create a timer to keep our label up-to-date
 		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(updateLabel:) userInfo:nil repeats:YES];
-		[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 	}
 	return %orig;
 }
