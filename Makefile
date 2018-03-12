@@ -4,7 +4,7 @@ TARGET = iphone:clang:latest:8.0
 
 THEOS_BUILD_DIR = Packages
 
-include theos/makefiles/common.mk
+include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = CCTimerCountdown
 CCTimerCountdown_CFLAGS = -fobjc-arc
