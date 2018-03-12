@@ -5,5 +5,5 @@ Architecture: iphoneos-arm
 Description: An awesome Cydia Substrate tweak!
 Author: Zane Helton
 Section: Tweaks
-Version: 0.0.2-2+debug
+Version: 0.0.2-5+debug
 Installed-Size: 208

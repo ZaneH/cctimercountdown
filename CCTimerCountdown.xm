@@ -69,6 +69,10 @@ CCUIContentModuleContainerView *timerModuleContainerView;
 		int timeDelta = [pendingDate timeIntervalSinceDate:[NSDate date]];
 		if (timeDelta > 0) {
 			[[timerModuleContainerView containerView] setAlpha:0.25f];
+			if (timeRemainingLabel) {
+				[timeRemainingLabel removeFromSuperview];
+				timeRemainingLabel = nil;
+			}
 
 			timeRemainingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [timerModuleContainerView frame].size.width, [timerModuleContainerView frame].size.height)];
 			[timeRemainingLabel setText:[self prettyPrintTime:timeDelta]];
@@ -150,6 +154,11 @@ CCUIContentModuleContainerView *timerModuleContainerView;
 		NSTimeInterval secondsBetweenNowAndFireDate = [pendingDate timeIntervalSinceDate:[NSDate date]];
 		// create our label as long as there is a timer running
 		if (secondsBetweenNowAndFireDate > 0) {
+			if (timeRemainingLabel) {
+				[timeRemainingLabel removeFromSuperview];
+				timeRemainingLabel = nil;
+			}
+
 			// grab the timer cc shortcut from a SBCCButtonSectionController ivar
 			NSDictionary *ccShortcuts = MSHookIvar<NSDictionary *>(self, "_moduleControllersByID");
 			// grab the timer cc button from the ivar's mutable array
