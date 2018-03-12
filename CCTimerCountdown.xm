@@ -170,12 +170,12 @@ CCUIContentModuleContainerView *timerModuleContainerView;
 	}
 
 	- (void)viewDidDisappear:(BOOL)animated {
-		%orig;
-
 		[pendingTimer invalidate];
 		pendingTimer = nil;
 		[timeRemainingLabel removeFromSuperview];
 		timeRemainingLabel = nil;
+
+		%orig;
 	}
 
 	%new
