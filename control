@@ -3,6 +3,6 @@ Name: CCTimerCountdown
 Depends: mobilesubstrate, firmware (>= 9.0)
 Version: 0.0.2
 Architecture: iphoneos-arm
-Description: An awesome Cydia Substrate tweak!
+Description: This tweak shows how much time is left on an active alarm from within the control center.
 Author: Zane Helton
 Section: Tweaks
