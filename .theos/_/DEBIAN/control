@@ -1,8 +1,9 @@
 Package: com.zanehelton.cctimercountdown
 Name: CCTimerCountdown
 Depends: mobilesubstrate, firmware (>= 10.0)
-Version: 0.0.2
 Architecture: iphoneos-arm
 Description: An awesome Cydia Substrate tweak!
 Author: Zane Helton
 Section: Tweaks
+Version: 0.0.2-1+debug
+Installed-Size: 204
